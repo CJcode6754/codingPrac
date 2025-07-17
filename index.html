@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      body,
+      html {
+        height: 100%;
+        margin: 0;
+      }
+      .todo-container {
+        max-width: 500px;
+        margin: auto;
+        background-color: white;
+        padding: 1rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      }
+      input[type="text"] {
+        width: 75%;
+        padding: 0.5rem;
+        margin-right: 0.5rem;
+      }
+
+      button {
+        padding: 0.5rem 1rem;
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+        margin-top: 1rem;
+      }
+
+      li {
+        padding: 0.5rem 1rem;
+        background: #e2e8f0;
+        border-radius: 4px;
+        margin-bottom: 0.5rem;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .remove-btn {
+        background: crimson;
+        color: white;
+        border: none;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="todo-container">
+      <h2>Todo App</h2>
+      <form id="todo-form">
+        <input
+          type="text"
+          id="task-input"
+          placeholder="Enter a task"
+          required
+        />
+        <button type="submit">Submit</button>
+      </form>
+
+      <ul id="task-list"></ul>
+    </div>
+  </body>
+
+  <script>
+    const form = document.getElementById("todo-form");
+    const taskInput = document.getElementById("task-input");
+    const taskList = document.getElementById("task-list");
+
+    window.addEventListener("DOMContentLoaded", loadTasks);
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const task = taskInput.value.trim();
+      if (task === "") return;
+
+      addTaskToDOM(task);
+      saveTaskToLocalStorage(task);
+
+      taskInput.value = "";
+    });
+
+    function addTaskToDOM(task) {
+      const li = document.createElement("li");
+      li.innerHTML = `
+      <span>${task}</span>
+      <button class="remove-btn">Remove</button>
+    `;
+
+      li.querySelector(".remove-btn").addEventListener("click", function () {
+        taskList.removeChild(li);
+        removeTaskFromLocalStorage(task);
+      });
+
+      taskList.appendChild(li);
+    }
+
+    function saveTaskToLocalStorage(task) {
+      const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+      tasks.push(task);
+      localStorage.setItem("tasks", JSON.stringify(tasks));
+    }
+
+    function removeTaskFromLocalStorage(taskToRemove) {
+      let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+      tasks = tasks.filter((task) => task !== taskToRemove);
+      localStorage.setItem("tasks", JSON.stringify(tasks));
+    }
+
+    function loadTasks() {
+      const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+      tasks.forEach((task) => addTaskToDOM(task));
+    }
+  </script>
+</html>
