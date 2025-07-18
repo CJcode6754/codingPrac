@@ -11,8 +11,6 @@ const orders = [
     {id: 5, order: "Pencil"},
 ];
 
-let Orders = [];
-
 for(let user of users){
     user.orders = [];
     for(let order of orders){

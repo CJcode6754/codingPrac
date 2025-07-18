@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  </head>
+  <body>
+    <div id="app">
+    <span v-html="getMessage()"></span>
+      <div>luckyNumber: {{luckyNumber}}</div>
+      <div v-once>Once luckyNumber: {{luckyNumber}}</div>
+      <div>Employee Salary: {{employees.salary}}</div>
+    </div>
+  </body>
+
+  <script>
+    const { createApp, ref, reactive, onMounted } = Vue;
+
+    createApp({
+      setup() {
+        const message = 'Hello'
+        let luckyNumber = ref(6);
+
+        let employees = reactive({
+          name: "Ceejay",
+          age: 22,
+          salary: 20000,
+        });
+
+        function getMessage(){
+            return `<h1><u>${message}</u></h1>`
+        }
+
+        function updateLuckyNumber() {
+          setTimeout(() => {
+            luckyNumber.value = 7;
+            employees.salary = 100;
+          }, 2000);
+        }
+
+        onMounted(() => {
+            updateLuckyNumber();
+        })
+
+        return {
+            luckyNumber,
+            employees,
+            getMessage
+        };
+      },
+    }).mount("#app");
+  </script>
+</html>
